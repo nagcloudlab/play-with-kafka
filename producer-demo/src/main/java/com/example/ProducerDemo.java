@@ -23,7 +23,8 @@ public class ProducerDemo {
 //        properties.put("max.block.ms", 60000); // 1ms
 
 
-//        properties.put("acks", "all");
+//        properties.put("acks", "-1"); // latency
+
 //        properties.put("max.in.flight.requests.per.connection", 5);
 
 //         properties.put("request.timeout.ms", 30000);
@@ -58,9 +59,8 @@ public class ProducerDemo {
                 "Apache Kafka is a distributed event store and stream-processing platform. It is an open-source system developed by the Apache Software Foundation written in Java and Scala. The project aims to provide a unified, high-throughput, low-latency platform for handling real-time data feed\n" +
                 "Apache Kafka is a distributed event store and stream-processing platform. It is an open-source system developed by the Apache Software Foundation write";
 
-        for (int i = 0; i < 1000*10000; i++) {
-            String key= i % 2==0?"even":"odd";
-            ProducerRecord<String, String> record1 = new ProducerRecord<>("topic3", key, value);
+        for (int i = 0; i < 100*1000; i++) {
+            ProducerRecord<String, String> record1 = new ProducerRecord<>("topic1", value);
             System.out.println("Sending message-"+i+" >>>>>>>>>>>>>>>>>");
             producer.send(record1, (recordMetadata, exception) -> {
                 if (exception == null) {
@@ -73,7 +73,7 @@ public class ProducerDemo {
                     System.out.println("Error while producing: " + exception);
                 }
             });
-            //TimeUnit.MILLISECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(1);
         }
 
 
