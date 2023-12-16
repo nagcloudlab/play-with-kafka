@@ -1,0 +1,19 @@
+
+
+server:
+  port: 8282
+
+spring:
+  main:
+    web-application-type: none
+  application:
+    name: transaction-consumer
+  kafka:
+    consumer:
+      group-id: transaction-consumer
+      bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+      key-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+
+debug: false

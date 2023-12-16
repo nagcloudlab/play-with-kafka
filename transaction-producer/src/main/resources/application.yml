@@ -1,21 +1,24 @@
 
 
+
+server:
+  port: 8181
+
 spring:
   main:
     web-application-type: none
   application:
     name: transaction-producer
   kafka:
-    bootstrap-servers: localhost:9092
-#    schema-registry: http://localhost:8081
     producer:
+      bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
       key-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-    consumer:
-      group-id: transaction-consumer
-      key-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      acks: -1
+
 
 transaction-producer:
-  topic: transactions
   fixed-rate: 1000
+  topic-name: transactions
+
+debug: false

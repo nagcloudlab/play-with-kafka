@@ -6,6 +6,8 @@
       <list>
         <option value="$PROJECT_DIR$/producer-demo/pom.xml" />
         <option value="$PROJECT_DIR$/consumer-demo/pom.xml" />
+        <option value="$PROJECT_DIR$/transaction-consumer/pom.xml" />
+        <option value="$PROJECT_DIR$/transaction-producer/pom.xml" />
       </list>
     </option>
     <option name="workspaceImportForciblyTurnedOn" value="true" />

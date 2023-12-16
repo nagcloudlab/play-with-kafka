@@ -15,36 +15,22 @@ public class ProducerDemo {
         properties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         properties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
-        //properties.put("batch.size", 1*16384); // 16k
-        //properties.put("linger.ms", 0); // 1ms
-        //properties.put("compression.type", "snappy");
-
+//        properties.put("batch.size", 1*16384); // 16k
+//        properties.put("linger.ms", 0); // 1ms
+//        properties.put("compression.type", "snappy");
 //        properties.put("buffer.memory", 33554432); // 32MB
 //        properties.put("max.block.ms", 60000); // 1ms
-
-
 //        properties.put("acks", "-1"); // latency
-
 //        properties.put("max.in.flight.requests.per.connection", 5);
-
-//         properties.put("request.timeout.ms", 30000);
-
-         // ** Transient Failures ( Timeout, Network Exception, Leader Not Available, Not Enough Replicas)
+//        properties.put("request.timeout.ms", 30000);
 //        properties.put("retries", Integer.MAX_VALUE);
 //        properties.put("retry.backoff.ms", 1000);
-
 //        properties.put("enable.idempotence", true);
-
 //        properties.setProperty("delivery.timeout.ms", "120000");
-
 //        properties.setProperty("connections.max.idle.ms", "540000");
-
 //        properties.setProperty("max.request.size", "1048576"); // 1MB
-
 //        properties.setProperty("interceptor.classes", "com.example.ProducerInterceptor");
-
 //        properties.setProperty("transactional.id", "my-transactional-id");
-
 //        properties.setProperty("partitioner.class", "com.example.ProducerPartitioner");
 
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
@@ -59,9 +45,9 @@ public class ProducerDemo {
                 "Apache Kafka is a distributed event store and stream-processing platform. It is an open-source system developed by the Apache Software Foundation written in Java and Scala. The project aims to provide a unified, high-throughput, low-latency platform for handling real-time data feed\n" +
                 "Apache Kafka is a distributed event store and stream-processing platform. It is an open-source system developed by the Apache Software Foundation write";
 
-        for (int i = 0; i < 100*1000; i++) {
-            ProducerRecord<String, String> record1 = new ProducerRecord<>("topic1", value);
-            System.out.println("Sending message-"+i+" >>>>>>>>>>>>>>>>>");
+        for (int i = 0; i < 100 ; i++) {
+            ProducerRecord<String, String> record1 = new ProducerRecord<>("topic4", value);
+            System.out.println("Sending message-" + i + " >>>>>>>>>>>>>>>>>");
             producer.send(record1, (recordMetadata, exception) -> {
                 if (exception == null) {
                     System.out.println("<<<<<<<<<<<<<<Received new metadata \n" +
