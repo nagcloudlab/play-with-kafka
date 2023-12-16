@@ -6,6 +6,8 @@ import com.example.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.listener.AcknowledgingMessageListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,23 +18,25 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
-public class RetryTransactionConsumerService /*implements AcknowledgingMessageListener<TransactionKey,Transaction> */ {
+public class TransactionConsumerService /*implements AcknowledgingMessageListener<TransactionKey,Transaction> */ {
 
     private final TransactionRepository transactionRepository;
 
     @KafkaListener(
-            groupId = "DLT.transaction-consumer-group",
-            topics = "transactions.RETRY",
+            groupId = "transaction-consumer-group",
+            topics = "transactions",
             containerFactory = "kafkaListenerContainerFactory"
     )
     @Transactional
     public void onNewTransaction(ConsumerRecord<TransactionKey, Transaction> consumerRecord) {
-        System.out.println("Received RETRY transaction: " + consumerRecord.value());
+        System.out.println("Received new transaction: " + consumerRecord.value());
 
 //        Transaction transaction=consumerRecord.value();
 //        System.out.println(transaction);
 
-//        validate(transaction);
+
+        validate(consumerRecord.value());
+
         com.example.entity.Transaction transaction = new com.example.entity.Transaction();
         transaction.setId(consumerRecord.value().getId());
         transaction.setType(consumerRecord.value().getType());

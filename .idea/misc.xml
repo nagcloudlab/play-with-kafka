@@ -8,9 +8,12 @@
         <option value="$PROJECT_DIR$/consumer-demo/pom.xml" />
         <option value="$PROJECT_DIR$/transaction-consumer/pom.xml" />
         <option value="$PROJECT_DIR$/transaction-producer/pom.xml" />
+        <option value="$PROJECT_DIR$/01-producer/pom.xml" />
+        <option value="$PROJECT_DIR$/02-consumer/pom.xml" />
+        <option value="$PROJECT_DIR$/03-transaction-producer/pom.xml" />
+        <option value="$PROJECT_DIR$/04-transaction-consumer/pom.xml" />
       </list>
     </option>
-    <option name="workspaceImportForciblyTurnedOn" value="true" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="corretto-17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />

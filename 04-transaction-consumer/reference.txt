@@ -1,0 +1,53 @@
+
+Spring kafka Consumer ( in-deep ):
+
+- how spring-boot auto_configuration works for consumer
+- consumer-group re-balance
+- default consumer offset management
+- manual consumer offset management
+- concurrent consumer
+- persist consumed events to database
+- event validation before persisting to database
+- custom error handler & custom retry
+- add retry listener to monitor each retry attempt
+- retry specific exception
+- retry failed records with exponential backoff
+
+- Recovery in kafka Consumer
+
+     Recover Types
+    - #1: re-process the failed the record again ( e.g service the consumer interacts with is temporarily down)
+            option-1 : publish the failed message to Retry Topic
+            option-2 : Save the failed message to database and retry later with scheduled job
+    - #2: Discard the message and move on ( e.g Parsing error, invalid Event )
+            option-1 : publish the failed message to Dead Letter Topic for tracking purpose
+            option-2 : Save the failed message to database
+- publish message to kafka retry-topic
+- build the retry-topic listener to re-process the message
+- explore message headers
+- save the failed message to database
+- spring scheduler to recover the failed messages
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+Spring kafka Producer ( Error handling ):
+
+
+kafka producer errors
+
+    - kafka cluster not available
+    - if acks=all, kafka cluster is available but partition leader is not available
+    - min.insync.replicas > 1 and acks=all, kafka cluster is available but not enough replicas are in-sync
+
+- Retry in kafka producer - broker not available
+- retain / recover failed records
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+

@@ -1,0 +1,27 @@
+
+
+------------------------------
+**Cluster with one broker**
+------------------------------
+
+zookeeper-server-start.sh config/zookeeper.properties
+kafka-server-start.sh config/server.properties
+
+
+------------------------------
+**Topics**
+------------------------------
+kafka-topics.sh --bootstrap-server localhost:9092 --list 
+kafka-topics.sh --bootstrap-server localhost:9092 --create --topic topic1 --replication-factor 1 --partitions 3 
+kafka-topics.s --bootstrap-server localhost:9092 --topic topic2 --describe 
+kafka-topics.sh --bootstrap-server localhost:9092 --topic topic3 --delete 
+
+
+------------------------------
+**Consumer Groups**
+------------------------------
+
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group group1
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --to-earliest --execute --topic first-topic --group group2
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --shift-by 2 --execute --topic first-topic --group group2
