@@ -1,11 +1,41 @@
 
 
 ------------------------------
+Download Apache Kafka
+------------------------------
+
+curl -O https://downloads.apache.org/kafka/3.6.1/kafka_2.13-3.6.1.tgz
+
+------------------------------
+Download confluent Kafka
+------------------------------
+
+curl -O https://packages.confluent.io/archive/7.5/confluent-7.5.2.tar.gz
+
+
+
+------------------------------
 **Cluster with one broker**
 ------------------------------
 
-zookeeper-server-start.sh config/zookeeper.properties
-kafka-server-start.sh config/server.properties
+Apache kafka
+--------------
+
+./bin/zookeeper-server-start.sh config/zookeeper.properties
+./bin/kafka-server-start.sh config/server.properties
+
+Confluent kafka
+--------------
+
+./bin/zookeeper-server-start etc/kafka/zookeeper.properties
+./bin/kafka-server-start.sh etc/kafka/server.properties
+
+
+------------------------------
+**Start Schema Registry**
+------------------------------
+
+./bin/schema-registry-start etc/schema-registry/schema-registry.properties
 
 
 ------------------------------

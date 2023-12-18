@@ -1,5 +1,6 @@
 package com.example.config;
 
+
 import com.example.domain.Transaction;
 import com.example.domain.TransactionKey;
 import lombok.RequiredArgsConstructor;
@@ -26,63 +27,48 @@ import java.util.List;
 @RequiredArgsConstructor
 public class KafkaConfig {
 
-
     private final KafkaProperties properties;
     private final KafkaTemplate<TransactionKey, Transaction> template;
 
-    public DeadLetterPublishingRecoverer deadLetterPublishingRecoverer() {
+
+    private DeadLetterPublishingRecoverer deadLetterPublishingRecoverer() {
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template,
                 (r, e) -> {
                     if (e.getCause() instanceof IllegalStateException) {
-                        System.out.println("************* RETRY *************");
                         return new TopicPartition(r.topic() + ".RETRY", r.partition());
                     } else {
-                        System.out.println("************* DLT *************");
                         return new TopicPartition(r.topic() + ".DLT", r.partition());
                     }
                 });
         return recoverer;
     }
 
-
-    ConsumerRecordRecoverer consumerRecordRecoverer=(consumerRecord, exception) -> {
-        System.out.println("Consumer Record: "+consumerRecord);
-        System.out.println("Exception: "+exception);
-    };
-
-
-    public DefaultErrorHandler errorHandler() {
-
-//        var fixedBackOff=new FixedBackOff(1000,2);
-
+    private CommonErrorHandler commonErrorHandler() {
+        //var fixedBackOff = new FixedBackOff(1000, 2);
         var exponentialBackOff = new ExponentialBackOffWithMaxRetries(2);
         exponentialBackOff.setInitialInterval(1000);
         exponentialBackOff.setMultiplier(2.0);
         exponentialBackOff.setMaxInterval(2_000);
-
         var errorHandler = new DefaultErrorHandler(
-                //deadLetterPublishingRecoverer(),
-//                consumerRecordRecoverer,
-//                fixedBackOff
+                deadLetterPublishingRecoverer(),
+                //fixedBackOff
                 exponentialBackOff
         );
-
-        errorHandler.setRetryListeners((((record, ex, deliveryAttempt) -> {
-//            System.out.println("Record: "+record);
-//            System.out.println("Exception: "+ex);
-            System.out.println("Delivery Attempt: " + deliveryAttempt);
-        })));
-
-//        var exceptionsNotToRetry= List.of(
+        errorHandler.setRetryListeners((record, exception, deliveryAttempt) -> {
+            System.out.println("Delivery attempt: " + deliveryAttempt);
+        });
+//        var exceptionsNotToRetry = List.of(
 //                IllegalArgumentException.class
 //        );
+//        var exceptionsToRetry = List.of(
+//                IllegalStateException.class
+//        );
 //        exceptionsNotToRetry.forEach(errorHandler::addNotRetryableExceptions);
-
+//        exceptionsToRetry.forEach(errorHandler::addRetryableExceptions);
         return errorHandler;
     }
 
     @Bean
-    @ConditionalOnMissingBean(name = "kafkaListenerContainerFactory")
     ConcurrentKafkaListenerContainerFactory<?, ?> kafkaListenerContainerFactory(
             ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
             ObjectProvider<ConsumerFactory<Object, Object>> kafkaConsumerFactory,
@@ -93,11 +79,12 @@ public class KafkaConfig {
                 this.properties.buildConsumerProperties(sslBundles.getIfAvailable()))));
         kafkaContainerCustomizer.ifAvailable(factory::setContainerCustomizer);
 
-        //factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
-        factory.setConcurrency(3);
-        factory.setCommonErrorHandler(errorHandler());
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.BATCH);
+        //factory.setConcurrency(1);
+        factory.setCommonErrorHandler(commonErrorHandler());
 
         return factory;
     }
+
 
 }

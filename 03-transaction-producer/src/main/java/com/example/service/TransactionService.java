@@ -17,21 +17,21 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class TransactionService {
 
-    //private final KafkaProducer<TransactionKey, Transaction> kafkaProducer;
+//    private final KafkaProducer<TransactionKey, Transaction> kafkaProducer;
 
     @Value("${transaction-producer.topic-name}")
-    private  String topicName;
+    private String topicName;
 
     private final KafkaTemplate<TransactionKey, Transaction> kafkaTemplate;
 
-    public CompletableFuture<SendResult<TransactionKey,Transaction>> sendTransactionEvent(Transaction transaction) {
-        ProducerRecord<TransactionKey,Transaction> producerRecord=new ProducerRecord<>(topicName,buildKey(transaction),transaction);
-        CompletableFuture<SendResult<TransactionKey,Transaction>> completableFuture= kafkaTemplate.send(producerRecord);
-        return completableFuture.whenComplete((sendResult, throwable) -> {
-//            if(throwable==null){
-//                System.out.println("Success");
-//            }else{
-//                System.out.println("Error");
+    public CompletableFuture<SendResult<TransactionKey, Transaction>> sendTransactionEvent(Transaction transaction) {
+        ProducerRecord<TransactionKey, Transaction> producerRecord = new ProducerRecord<>(topicName, buildKey(transaction), transaction);
+        CompletableFuture<SendResult<TransactionKey, Transaction>> completableFuture = kafkaTemplate.send(producerRecord);
+        return completableFuture.whenComplete((result, ex) -> {
+//            if (ex == null) {
+//                System.out.println("Message sent successfully");
+//            } else {
+//                System.out.println("Message sent failed");
 //            }
         });
     }

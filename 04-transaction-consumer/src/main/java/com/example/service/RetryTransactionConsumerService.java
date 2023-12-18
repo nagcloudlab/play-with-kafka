@@ -6,8 +6,6 @@ import com.example.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.listener.AcknowledgingMessageListener;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,21 +16,23 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
-public class TransactionConsumerService /*implements AcknowledgingMessageListener<TransactionKey,Transaction>*/ {
+public class RetryTransactionConsumerService /*implements AcknowledgingMessageListener<TransactionKey,Transaction>*/ {
 
     private final TransactionRepository transactionRepository;
 
 
     @KafkaListener(
-            groupId = "transaction-consumer-group",
-            topics = "transactions",
+            groupId = "transaction-consumer-group-retry",
+            topics = "transactions.RETRY",
             containerFactory = "kafkaListenerContainerFactory"
     )
     @Transactional
     public void onNewTransaction(ConsumerRecord<TransactionKey, Transaction> consumerRecord) {
         System.out.println("Received new transaction: " + consumerRecord.value());
-
-        validate(consumerRecord.value());
+        consumerRecord.headers().forEach(header -> {
+            System.out.println(header.key() + " : " + new String(header.value()));
+        });
+       // validate(consumerRecord.value());
 
         // Message/Event to Entity
         com.example.entity.Transaction transactionEntity = new com.example.entity.Transaction();
@@ -50,8 +50,11 @@ public class TransactionConsumerService /*implements AcknowledgingMessageListene
     }
 
     private void validate(Transaction transaction) {
-        if(true){
-            throw new IllegalStateException("something bad happened"); // Transient failure
+//        if(true){
+//            throw new IllegalStateException("something bad happened"); // Transient failure
+//        }
+        if(transaction.getAmount() == null){
+            throw new IllegalArgumentException("From Account"); // Bad record
         }
     }
 
