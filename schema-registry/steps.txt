@@ -1,0 +1,17 @@
+
+
+
+Purchase Message Avro Schema
+---------------------------
+
+{"type":"record","name":"Purchase","namespace":"io.confluent.developer.avro","fields":[{"name":"item","type":{"type":"string","avro.java.string":"String"}},{"name":"total_cost","type":"double"},{"name":"customer_id","type":{"type":"string","avro.java.string":"String"}}]}
+
+
+
+
+register new schema
+-----------------------
+
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
+  --data '{"schema": "{\"type\":\"record\",\"name\":\"Purchase\",\"namespace\":\"io.confluent.developer.avro\",\"fields\":[{\"name\":\"item\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"total_cost\",\"type\":\"double\"},{\"name\":\"customer_id\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}"}' \
+  http://localhost:8081/subjects/purchases-value/versions
